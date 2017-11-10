@@ -5,6 +5,7 @@ import (
 	"io"
 	"math/rand"
 	"github.com/gin-gonic/gin"
+	"github.com/Satoshi-Y/liveGetTogether/lgt/modules"
 )
 
 func main() {
@@ -29,8 +30,8 @@ func main() {
 
 func stream(c *gin.Context) {
 	roomid := c.Param("roomid")
-	listener := openListener(roomid)
-	defer closeListener(roomid, listener)
+	listener := modules.OpenListener(roomid)
+	defer modules.CloseListener(roomid, listener)
 
 	c.Stream(func(w io.Writer) bool {
 		c.SSEvent("message", <-listener)
@@ -51,7 +52,7 @@ func roomPOST(c *gin.Context) {
 	roomid := c.Param("roomid")
 	userid := c.PostForm("user")
 	message := c.PostForm("message")
-	room(roomid).Submit(userid + ": " + message)
+	modules.Room(roomid).Submit(userid + ": " + message)
 
 	c.JSON(200, gin.H{
 		"status":  "success",
@@ -61,5 +62,5 @@ func roomPOST(c *gin.Context) {
 
 func roomDELETE(c *gin.Context) {
 	roomid := c.Param("roomid")
-	deleteBroadcast(roomid)
+	modules.DeleteBroadcast(roomid)
 }
