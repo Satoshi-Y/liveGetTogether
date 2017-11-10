@@ -13,7 +13,7 @@
                 $('#message_form').focus();
             });
             if (!!window.EventSource) {
-                var source = new EventSource('/v1/stream/{{.roomid}}');
+                var source = new EventSource('/v1/roomStream/{{.roomid}}');
                 source.addEventListener('message', function(e) {
                     $('#messages').append(e.data + "</br>");
                     $('html, body').animate({scrollTop:$(document).height()}, 'slow');
