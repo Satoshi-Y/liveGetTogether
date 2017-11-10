@@ -1,21 +1,21 @@
-package main
+package modules
 
 import "github.com/dustin/go-broadcast"
 
 var roomChannels = make(map[string]broadcast.Broadcaster)
 
-func openListener(roomid string) chan interface{} {
+func OpenListener(roomid string) chan interface{} {
 	listener := make(chan interface{})
-	room(roomid).Register(listener)
+	Room(roomid).Register(listener)
 	return listener
 }
 
-func closeListener(roomid string, listener chan interface{}) {
-	room(roomid).Unregister(listener)
+func CloseListener(roomid string, listener chan interface{}) {
+	Room(roomid).Unregister(listener)
 	close(listener)
 }
 
-func deleteBroadcast(roomid string) {
+func DeleteBroadcast(roomid string) {
 	b, ok := roomChannels[roomid]
 	if ok {
 		b.Close()
@@ -23,7 +23,7 @@ func deleteBroadcast(roomid string) {
 	}
 }
 
-func room(roomid string) broadcast.Broadcaster {
+func Room(roomid string) broadcast.Broadcaster {
 	b, ok := roomChannels[roomid]
 	if !ok {
 		b = broadcast.NewBroadcaster(10)
